@@ -40,8 +40,12 @@ taskRoutes.patch("/update/:taskId", async (req, res) => {
     const task = await taskModal.findOne({ _id: taskId });
     if (task) {
       if (task.userID == userID) {
-        await taskModal.findByIdAndUpdate({ _id: taskId }, req.body);
-        res.send({ msg: "task updated successfully", data: req.body });
+        let updatedtask = await taskModal.findByIdAndUpdate(
+          { _id: taskId },
+          req.body,
+          { new: true }
+        );
+        res.send({ msg: "task updated successfully", data: updatedtask });
       } else {
         res.send({ msg: "you are not authorized to update this task" });
       }
