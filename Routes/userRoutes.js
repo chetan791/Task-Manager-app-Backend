@@ -40,7 +40,7 @@ userRoutes.post("/login", async (req, res) => {
           const token = jwt.sign({ userID: user._id }, process.env.secretkey, {
             expiresIn: "30d",
           });
-          res.send({ msg: "login successfull", token: token });
+          res.send({ msg: "login successfull", token: token, name: user.name });
         } else {
           res.send({ msg: "wrong credentials" });
         }

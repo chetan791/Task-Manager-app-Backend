@@ -26,7 +26,7 @@ taskRoutes.post("/create", async (req, res) => {
       userID,
     });
     newTask.save();
-    res.send({ msg: "task created successfully" });
+    res.send({ msg: "task created successfully", data: newTask });
   } catch (error) {
     res.status(500).send({ msg: "internal server error" });
   }
