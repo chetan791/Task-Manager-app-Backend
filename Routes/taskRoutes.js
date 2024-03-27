@@ -62,7 +62,7 @@ taskRoutes.delete("/delete/:taskId", async (req, res) => {
     if (task) {
       if (task.userID == userID) {
         await taskModal.findByIdAndDelete({ _id: taskId });
-        res.send({ msg: "task deleted successfully" });
+        res.send({ msg: "task deleted successfully", userID });
       } else {
         res.send({ msg: "you are not authorized to delete this task" });
       }
