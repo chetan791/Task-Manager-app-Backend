@@ -4,6 +4,7 @@ const cors = require("cors");
 const connection = require("./DB");
 const userRoutes = require("./Routes/userRoutes");
 const taskRoutes = require("./Routes/taskRoutes");
+const draggableTaskRoutes = require("./Routes/draggableTaskRoutes");
 require("dotenv").config();
 
 app.use(express.json());
@@ -13,6 +14,8 @@ app.use(cors());
 app.use("/user", userRoutes);
 
 app.use("/task", taskRoutes);
+
+app.use("/draggabletask", draggableTaskRoutes);
 
 // listening to all requests
 app.listen(process.env.port, async () => {
