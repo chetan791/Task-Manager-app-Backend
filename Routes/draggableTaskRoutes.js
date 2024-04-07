@@ -81,25 +81,38 @@ draggableTaskRoutes.delete("/delete/:taskId", async (req, res) => {
 });
 
 // endpoints to download task of the user
+// draggableTaskRoutes.get("/download", async (req, res) => {
+//   const { userID } = req.body;
+//   try {
+//     const data = await draggableTaskModal.find({ userID });
+//     const pdfDoc = new PDFDocument();
+//     pdfDoc.pipe(fs.createWriteStream("task.pdf"));
+
+//     data.forEach((task) => {
+//       pdfDoc.fontSize(12).text(`Task ID: ${task._id}`);
+//       pdfDoc.fontSize(10).text(`Title: ${task.title}`);
+//       pdfDoc.fontSize(10).text(`Description: ${task.description}`);
+//       pdfDoc.moveDown();
+//     });
+
+//     pdfDoc.end();
+//     res.download("task.pdf");
+//     fs.unlinkSync("task.pdf");
+//   } catch (error) {
+//     res.status(500).send({ msg: "Internal server error" });
+//   }
+// });
 draggableTaskRoutes.get("/download", async (req, res) => {
   const { userID } = req.body;
   try {
     const data = await draggableTaskModal.find({ userID });
     const pdfDoc = new PDFDocument();
     pdfDoc.pipe(fs.createWriteStream("task.pdf"));
-
-    data.forEach((task) => {
-      pdfDoc.fontSize(12).text(`Task ID: ${task._id}`);
-      pdfDoc.fontSize(10).text(`Title: ${task.title}`);
-      pdfDoc.fontSize(10).text(`Description: ${task.description}`);
-      pdfDoc.moveDown();
-    });
-
+    pdfDoc.text(JSON.stringify(data));
     pdfDoc.end();
     res.download("task.pdf");
-    fs.unlinkSync("task.pdf");
   } catch (error) {
-    res.status(500).send({ msg: "Internal server error" });
+    res.status(500).send({ msg: "internal server error" });
   }
 });
 
