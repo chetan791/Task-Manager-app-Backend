@@ -2,6 +2,8 @@ const express = require("express");
 const auth = require("../middleware/authMiddleware");
 const draggableTaskModal = require("../model/draggableTaskModel");
 const draggableTaskRoutes = express.Router();
+const fs = require("fs");
+const PDFDocument = require("pdfkit");
 
 draggableTaskRoutes.use(auth);
 // endpoints to get all task of the user
@@ -75,6 +77,29 @@ draggableTaskRoutes.delete("/delete/:taskId", async (req, res) => {
     }
   } catch (error) {
     res.status(500).send({ msg: "internal server error" });
+  }
+});
+
+// endpoints to download task of the user
+draggableTaskRoutes.get("/download", async (req, res) => {
+  const { userID } = req.body;
+  try {
+    const data = await draggableTaskModal.find({ userID });
+    const pdfDoc = new PDFDocument();
+    pdfDoc.pipe(fs.createWriteStream("task.pdf"));
+
+    data.forEach((task) => {
+      pdfDoc.fontSize(12).text(`Task ID: ${task._id}`);
+      pdfDoc.fontSize(10).text(`Title: ${task.title}`);
+      pdfDoc.fontSize(10).text(`Description: ${task.description}`);
+      pdfDoc.moveDown();
+    });
+
+    pdfDoc.end();
+    res.download("task.pdf");
+    fs.unlinkSync("task.pdf");
+  } catch (error) {
+    res.status(500).send({ msg: "Internal server error" });
   }
 });
 
