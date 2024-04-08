@@ -95,7 +95,10 @@ draggableTaskRoutes.get("/download", async (req, res) => {
       pdfDoc.moveDown();
     });
     pdfDoc.end();
-    res.download("task.pdf");
+    res.download("./task.pdf", "task.pdf", {
+      headers: { "Content-Type": "application/pdf" },
+    });
+
     fs.unlinkSync("task.pdf");
   } catch (error) {
     res.status(500).send({ msg: "Internal server error" });
